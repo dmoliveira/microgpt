@@ -2,6 +2,8 @@
 
 Public GitHub Pages documentation for Karpathy's `microgpt.py` implementation, with visual explanations and runnable examples.
 
+![microgpt docs preview](docs/assets/preview.svg)
+
 ## Features
 
 - Hero section with badges and quick links
@@ -27,6 +29,10 @@ Open `docs/index.html` in your browser.
 3. Set source to **Deploy from a branch**.
 4. Select branch `main` and folder `/docs`.
 5. Save and wait for Pages to publish.
+
+## Donation links
+
+Support links live in `docs/index.html` under the `#support` section. Replace with your own profiles if you fork this repo.
 
 ## License
 
