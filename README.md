@@ -34,6 +34,14 @@ Open `docs/index.html` in your browser.
 
 Support links live in `docs/index.html` under the `#support` section. Replace with your own profiles if you fork this repo.
 
+## Custom domain (optional)
+
+1. Copy `docs/CNAME.example` to `docs/CNAME`.
+2. Replace `docs.example.com` with your real domain.
+3. Commit and push.
+4. In GitHub repo settings, open **Pages** and set the same custom domain.
+5. Configure DNS with a `CNAME` record pointing to `<your-user>.github.io`.
+
 ## License
 
 MIT - see `LICENSE`.
