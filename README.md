@@ -7,7 +7,9 @@ Public GitHub Pages documentation for Karpathy's `microgpt.py` implementation, w
 ## Features
 
 - Hero section with badges and quick links
-- Concept-first walkthrough of the full implementation
+- Context-first concepts section before code
+- Full embedded `microgpt.py` core source block
+- Step-by-step walkthrough after the full code listing
 - Code snippets with commentary for key blocks
 - Visuals: training curve chart and attention heatmap
 - Support / donation section for project sustainability
