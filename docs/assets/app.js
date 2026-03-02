@@ -92,7 +92,8 @@ async function loadCoreCode() {
     const text = await response.text();
     el.textContent = text;
   } catch (_error) {
-    el.textContent = "Unable to load local source. Open docs/assets/microgpt.py directly.";
+    el.textContent =
+      "Unable to load local source. Open docs/assets/microgpt.py directly.";
   }
 }
 
