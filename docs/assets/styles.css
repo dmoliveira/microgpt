@@ -221,6 +221,11 @@ canvas {
   gap: 0.6rem;
 }
 
+.support-note {
+  color: var(--muted);
+  margin-top: -0.2rem;
+}
+
 .pill {
   border: 1px solid #c4b79e;
   padding: 0.5rem 0.9rem;
