@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>microgpt - Implementation Guide</title>
+    <meta
+      name="description"
+      content="A visual, concept-first guide to Karpathy's microgpt implementation in pure Python."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="nav shell">
+        <a class="logo" href="#top">microgpt</a>
+        <div class="nav-links">
+          <a href="#concepts">Concepts</a>
+          <a href="#implementation">Implementation</a>
+          <a href="#visuals">Visuals</a>
+          <a href="#support">Support</a>
+        </div>
+      </nav>
+
+      <div class="hero-body shell" id="top">
+        <p class="eyebrow">Pure Python. Full GPT loop.</p>
+        <h1>microgpt implementation, explained like a systems map</h1>
+        <p class="lead">
+          This documentation breaks down Karpathy's <code>microgpt.py</code> into
+          the smallest conceptual units: dataset, tokenizer, autograd,
+          transformer, training loop, and sampling.
+        </p>
+
+        <div class="badges" aria-label="Project badges">
+          <img src="https://img.shields.io/badge/license-MIT-1f7a8c" alt="MIT License" />
+          <img src="https://img.shields.io/badge/python-3.10%2B-f4a261" alt="Python 3.10 or newer" />
+          <img src="https://img.shields.io/badge/status-active-2a9d8f" alt="Active project" />
+          <img src="https://img.shields.io/badge/docs-GitHub%20Pages-e76f51" alt="GitHub Pages docs" />
+        </div>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#implementation">Read the walkthrough</a>
+          <a class="btn btn-ghost" href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95">Original gist</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section shell" id="concepts">
+        <h2>Main concepts</h2>
+        <p class="section-lead">
+          The implementation is intentionally compact. Each block corresponds to one
+          fundamental model primitive.
+        </p>
+
+        <div class="grid cards">
+          <article class="card">
+            <h3>Data and tokenization</h3>
+            <p>Characters become integer IDs, plus one BOS token to anchor sequence starts.</p>
+          </article>
+          <article class="card">
+            <h3>Autograd engine</h3>
+            <p>A scalar <code>Value</code> class builds a graph and backpropagates gradients recursively.</p>
+          </article>
+          <article class="card">
+            <h3>Transformer core</h3>
+            <p>Single-layer multi-head attention, feed-forward blocks, and residual stream updates.</p>
+          </article>
+          <article class="card">
+            <h3>Optimization loop</h3>
+            <p>Forward pass, cross-entropy objective, backward pass, and parameter updates.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section shell" id="implementation">
+        <h2>Implementation walkthrough</h2>
+        <div class="timeline">
+          <article>
+            <h3>1) Build a tiny corpus</h3>
+            <p>Names dataset is fetched if needed, shuffled, and split into character-level docs.</p>
+            <pre><code>if not os.path.exists('input.txt'):
+    import urllib.request
+    urllib.request.urlretrieve(names_url, 'input.txt')
+docs = [line.strip() for line in open('input.txt') if line.strip()]
+random.shuffle(docs)</code></pre>
+          </article>
+
+          <article>
+            <h3>2) Turn characters into a vocabulary</h3>
+            <p>Character set defines token IDs. BOS extends vocabulary for sequence starts.</p>
+            <pre><code>uchars = sorted(set(''.join(docs)))
+BOS = len(uchars)
+vocab_size = len(uchars) + 1</code></pre>
+          </article>
+
+          <article>
+            <h3>3) Backprop from first principles</h3>
+            <p>
+              Each operation records local derivatives, then <code>backward()</code>
+              performs reverse topological traversal.
+            </p>
+            <pre><code>for v in reversed(topo):
+    for child, local_grad in zip(v._children, v._local_grads):
+        child.grad += local_grad * v.grad</code></pre>
+          </article>
+
+          <article>
+            <h3>4) Run transformer + language head</h3>
+            <p>
+              Token embeddings and positional embeddings feed attention layers;
+              logits are projected by <code>lm_head</code>.
+            </p>
+            <pre><code>state_dict = {
+    'wte': matrix(vocab_size, n_embd),
+    'wpe': matrix(block_size, n_embd),
+    'lm_head': matrix(vocab_size, n_embd),
+}</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="section shell" id="visuals">
+        <h2>Visual intuition</h2>
+        <div class="visual-grid">
+          <article class="panel">
+            <h3>Architecture infographic</h3>
+            <img src="assets/architecture.svg" alt="MicroGPT architecture from tokens to sampled output" />
+          </article>
+
+          <article class="panel">
+            <h3>Example training loss trajectory</h3>
+            <canvas id="lossChart" width="520" height="260" aria-label="Loss chart"></canvas>
+          </article>
+
+          <article class="panel">
+            <h3>Attention heatmap toy example</h3>
+            <canvas id="attnHeatmap" width="520" height="260" aria-label="Attention heatmap"></canvas>
+          </article>
+        </div>
+      </section>
+
+      <section class="section shell" id="examples">
+        <h2>Usage examples</h2>
+        <div class="grid examples">
+          <article class="card">
+            <h3>Train from scratch</h3>
+            <pre><code>python microgpt.py</code></pre>
+            <p>Runs dataset prep, training loop, and sample generation in one file.</p>
+          </article>
+          <article class="card">
+            <h3>Tweak model size</h3>
+            <pre><code>n_layer = 2
+n_embd = 32
+n_head = 4</code></pre>
+            <p>Increase representational power while keeping code architecture unchanged.</p>
+          </article>
+          <article class="card">
+            <h3>Switch to your corpus</h3>
+            <pre><code>docs = [line.strip() for line in open('my_corpus.txt') if line.strip()]</code></pre>
+            <p>Use a domain-specific dataset to generate new token distributions.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section shell support" id="support">
+        <h2>Support this project</h2>
+        <p>
+          If these docs help you learn transformer internals, you can support ongoing
+          maintenance and educational content.
+        </p>
+        <div class="support-links">
+          <a class="pill" href="https://github.com/sponsors/dmoliveira">GitHub Sponsors</a>
+          <a class="pill" href="https://buymeacoffee.com">Buy Me a Coffee</a>
+          <a class="pill" href="https://ko-fi.com">Ko-fi</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="shell footer">
+      <p>
+        Documentation inspired by Karpathy's gist. Attribution:
+        <a href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95">microgpt.py</a>
+      </p>
+    </footer>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
