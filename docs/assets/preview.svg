@@ -1,0 +1,33 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="640" fill="#F6F3EC"/>
+  <rect x="64" y="64" width="1152" height="220" rx="24" fill="url(#hero)"/>
+  <text x="108" y="132" fill="#FFFFFF" font-family="Space Grotesk" font-size="24">Pure Python. Full GPT loop.</text>
+  <text x="108" y="188" fill="#FFFFFF" font-family="Space Grotesk" font-size="52" font-weight="700">microgpt implementation guide</text>
+  <text x="108" y="228" fill="#F6F8FA" font-family="Space Grotesk" font-size="22">Concepts, code walkthrough, charts, and attention visuals.</text>
+
+  <rect x="64" y="320" width="360" height="250" rx="16" fill="#FFFDF8" stroke="#D7D2C8"/>
+  <rect x="460" y="320" width="360" height="250" rx="16" fill="#FFFDF8" stroke="#D7D2C8"/>
+  <rect x="856" y="320" width="360" height="250" rx="16" fill="#FFFDF8" stroke="#D7D2C8"/>
+
+  <text x="94" y="366" fill="#1B1E23" font-family="Space Grotesk" font-size="24" font-weight="700">Main concepts</text>
+  <text x="94" y="404" fill="#535D6C" font-family="Space Grotesk" font-size="18">Tokenizer, autograd, transformer,</text>
+  <text x="94" y="430" fill="#535D6C" font-family="Space Grotesk" font-size="18">optimization loop.</text>
+
+  <text x="490" y="366" fill="#1B1E23" font-family="Space Grotesk" font-size="24" font-weight="700">Implementation</text>
+  <text x="490" y="404" fill="#535D6C" font-family="IBM Plex Mono" font-size="17">state_dict = { 'wte': ..., 'lm_head': ... }</text>
+  <text x="490" y="430" fill="#535D6C" font-family="IBM Plex Mono" font-size="17">for v in reversed(topo): ...</text>
+
+  <text x="886" y="366" fill="#1B1E23" font-family="Space Grotesk" font-size="24" font-weight="700">Visual intuition</text>
+  <rect x="886" y="390" width="300" height="12" rx="6" fill="#1F7A8C"/>
+  <rect x="886" y="418" width="250" height="12" rx="6" fill="#2A9D8F"/>
+  <rect x="886" y="446" width="210" height="12" rx="6" fill="#F4A261"/>
+  <text x="886" y="486" fill="#535D6C" font-family="Space Grotesk" font-size="18">Loss chart + attention heatmap</text>
+
+  <defs>
+    <linearGradient id="hero" x1="64" y1="64" x2="1216" y2="284" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1F7A8C"/>
+      <stop offset="0.5" stop-color="#2A9D8F"/>
+      <stop offset="1" stop-color="#F4A261"/>
+    </linearGradient>
+  </defs>
+</svg>

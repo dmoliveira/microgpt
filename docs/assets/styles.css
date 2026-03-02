@@ -23,8 +23,7 @@ body {
 body {
   background:
     radial-gradient(circle at 10% 5%, #f0c08755, transparent 35%),
-    radial-gradient(circle at 90% 15%, #2a9d8f1f, transparent 30%),
-    var(--bg);
+    radial-gradient(circle at 90% 15%, #2a9d8f1f, transparent 30%), var(--bg);
   color: var(--ink);
   font-family: "Space Grotesk", sans-serif;
   line-height: 1.6;
@@ -181,6 +180,24 @@ pre {
   padding: 0.7rem;
 }
 
+.code-frame pre {
+  max-height: 560px;
+  overflow: auto;
+}
+
+.code-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.code-meta a {
+  color: var(--brand);
+}
+
 code,
 pre {
   font-family: "IBM Plex Mono", monospace;
@@ -219,6 +236,11 @@ canvas {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.6rem;
+}
+
+.support-note {
+  color: var(--muted);
+  margin-top: -0.2rem;
 }
 
 .pill {

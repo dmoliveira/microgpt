@@ -21,7 +21,9 @@
       <nav class="nav shell">
         <a class="logo" href="#top">microgpt</a>
         <div class="nav-links">
+          <a href="#context">Context</a>
           <a href="#concepts">Concepts</a>
+          <a href="#core-code">Core code</a>
           <a href="#implementation">Implementation</a>
           <a href="#visuals">Visuals</a>
           <a href="#support">Support</a>
@@ -32,59 +34,147 @@
         <p class="eyebrow">Pure Python. Full GPT loop.</p>
         <h1>microgpt implementation, explained like a systems map</h1>
         <p class="lead">
-          This documentation breaks down Karpathy's <code>microgpt.py</code> into
-          the smallest conceptual units: dataset, tokenizer, autograd,
-          transformer, training loop, and sampling.
+          This documentation breaks down Karpathy's
+          <code>microgpt.py</code> into the smallest conceptual units: dataset,
+          tokenizer, autograd, transformer, training loop, and sampling.
         </p>
 
         <div class="badges" aria-label="Project badges">
-          <img src="https://img.shields.io/badge/license-MIT-1f7a8c" alt="MIT License" />
-          <img src="https://img.shields.io/badge/python-3.10%2B-f4a261" alt="Python 3.10 or newer" />
-          <img src="https://img.shields.io/badge/status-active-2a9d8f" alt="Active project" />
-          <img src="https://img.shields.io/badge/docs-GitHub%20Pages-e76f51" alt="GitHub Pages docs" />
+          <img
+            src="https://img.shields.io/badge/license-MIT-1f7a8c"
+            alt="MIT License"
+          />
+          <img
+            src="https://img.shields.io/badge/python-3.10%2B-f4a261"
+            alt="Python 3.10 or newer"
+          />
+          <img
+            src="https://img.shields.io/badge/status-active-2a9d8f"
+            alt="Active project"
+          />
+          <img
+            src="https://img.shields.io/badge/docs-GitHub%20Pages-e76f51"
+            alt="GitHub Pages docs"
+          />
         </div>
 
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#implementation">Read the walkthrough</a>
-          <a class="btn btn-ghost" href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95">Original gist</a>
+          <a class="btn btn-primary" href="#implementation"
+            >Read the walkthrough</a
+          >
+          <a
+            class="btn btn-ghost"
+            href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95"
+            >Original gist</a
+          >
         </div>
       </div>
     </header>
 
     <main>
-      <section class="section shell" id="concepts">
-        <h2>Main concepts</h2>
+      <section class="section shell" id="context">
+        <h2>Context first</h2>
         <p class="section-lead">
-          The implementation is intentionally compact. Each block corresponds to one
-          fundamental model primitive.
+          microgpt is a minimal, dependency-free GPT training and inference
+          loop. It is useful as a learning artifact because every primitive is
+          explicit: tokenization, autograd, transformer forward pass, optimizer
+          update, and autoregressive sampling.
+        </p>
+
+        <div class="grid cards">
+          <article class="card">
+            <h3>What this implementation teaches</h3>
+            <p>
+              How language modeling works end-to-end without framework magic or
+              hidden abstractions.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Why this matters</h3>
+            <p>
+              Once you understand this file, larger LLM stacks become easier to
+              reason about and debug.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Mental model</h3>
+            <p>
+              Predict next token repeatedly: train with cross-entropy,
+              backpropagate gradients, then sample one token at a time.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section shell" id="concepts">
+        <h2>Important concepts before code</h2>
+        <p class="section-lead">
+          The implementation is intentionally compact. Each block corresponds to
+          one fundamental model primitive.
         </p>
 
         <div class="grid cards">
           <article class="card">
             <h3>Data and tokenization</h3>
-            <p>Characters become integer IDs, plus one BOS token to anchor sequence starts.</p>
+            <p>
+              Characters become integer IDs, plus one BOS token to anchor
+              sequence starts.
+            </p>
           </article>
           <article class="card">
             <h3>Autograd engine</h3>
-            <p>A scalar <code>Value</code> class builds a graph and backpropagates gradients recursively.</p>
+            <p>
+              A scalar <code>Value</code> class builds a graph and
+              backpropagates gradients recursively.
+            </p>
           </article>
           <article class="card">
             <h3>Transformer core</h3>
-            <p>Single-layer multi-head attention, feed-forward blocks, and residual stream updates.</p>
+            <p>
+              Single-layer multi-head attention, feed-forward blocks, and
+              residual stream updates.
+            </p>
           </article>
           <article class="card">
             <h3>Optimization loop</h3>
-            <p>Forward pass, cross-entropy objective, backward pass, and parameter updates.</p>
+            <p>
+              Forward pass, cross-entropy objective, backward pass, and
+              parameter updates.
+            </p>
           </article>
         </div>
       </section>
 
+      <section class="section shell" id="core-code">
+        <h2>Full core code</h2>
+        <p class="section-lead">
+          Complete source from Karpathy's microgpt gist, embedded locally for
+          uninterrupted reading.
+        </p>
+        <article class="card code-frame">
+          <div class="code-meta">
+            <span
+              >Source:
+              <a
+                href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95"
+                >karpathy/microgpt.py</a
+              ></span
+            >
+            <span>File: <code>docs/assets/microgpt.py</code></span>
+          </div>
+          <pre><code id="coreCode">Loading core code...</code></pre>
+        </article>
+      </section>
+
       <section class="section shell" id="implementation">
-        <h2>Implementation walkthrough</h2>
+        <h2>Step-by-step explanation (after code)</h2>
         <div class="timeline">
           <article>
             <h3>1) Build a tiny corpus</h3>
-            <p>Names dataset is fetched if needed, shuffled, and split into character-level docs.</p>
+            <p>
+              Names dataset is fetched if needed, shuffled, and split into
+              character-level docs.
+            </p>
             <pre><code>if not os.path.exists('input.txt'):
     import urllib.request
     urllib.request.urlretrieve(names_url, 'input.txt')
@@ -94,7 +184,10 @@ random.shuffle(docs)</code></pre>
 
           <article>
             <h3>2) Turn characters into a vocabulary</h3>
-            <p>Character set defines token IDs. BOS extends vocabulary for sequence starts.</p>
+            <p>
+              Character set defines token IDs. BOS extends vocabulary for
+              sequence starts.
+            </p>
             <pre><code>uchars = sorted(set(''.join(docs)))
 BOS = len(uchars)
 vocab_size = len(uchars) + 1</code></pre>
@@ -103,7 +196,8 @@ vocab_size = len(uchars) + 1</code></pre>
           <article>
             <h3>3) Backprop from first principles</h3>
             <p>
-              Each operation records local derivatives, then <code>backward()</code>
+              Each operation records local derivatives, then
+              <code>backward()</code>
               performs reverse topological traversal.
             </p>
             <pre><code>for v in reversed(topo):
@@ -131,17 +225,30 @@ vocab_size = len(uchars) + 1</code></pre>
         <div class="visual-grid">
           <article class="panel">
             <h3>Architecture infographic</h3>
-            <img src="assets/architecture.svg" alt="MicroGPT architecture from tokens to sampled output" />
+            <img
+              src="assets/architecture.svg"
+              alt="MicroGPT architecture from tokens to sampled output"
+            />
           </article>
 
           <article class="panel">
             <h3>Example training loss trajectory</h3>
-            <canvas id="lossChart" width="520" height="260" aria-label="Loss chart"></canvas>
+            <canvas
+              id="lossChart"
+              width="520"
+              height="260"
+              aria-label="Loss chart"
+            ></canvas>
           </article>
 
           <article class="panel">
             <h3>Attention heatmap toy example</h3>
-            <canvas id="attnHeatmap" width="520" height="260" aria-label="Attention heatmap"></canvas>
+            <canvas
+              id="attnHeatmap"
+              width="520"
+              height="260"
+              aria-label="Attention heatmap"
+            ></canvas>
           </article>
         </div>
       </section>
@@ -152,19 +259,27 @@ vocab_size = len(uchars) + 1</code></pre>
           <article class="card">
             <h3>Train from scratch</h3>
             <pre><code>python microgpt.py</code></pre>
-            <p>Runs dataset prep, training loop, and sample generation in one file.</p>
+            <p>
+              Runs dataset prep, training loop, and sample generation in one
+              file.
+            </p>
           </article>
           <article class="card">
             <h3>Tweak model size</h3>
             <pre><code>n_layer = 2
 n_embd = 32
 n_head = 4</code></pre>
-            <p>Increase representational power while keeping code architecture unchanged.</p>
+            <p>
+              Increase representational power while keeping code architecture
+              unchanged.
+            </p>
           </article>
           <article class="card">
             <h3>Switch to your corpus</h3>
             <pre><code>docs = [line.strip() for line in open('my_corpus.txt') if line.strip()]</code></pre>
-            <p>Use a domain-specific dataset to generate new token distributions.</p>
+            <p>
+              Use a domain-specific dataset to generate new token distributions.
+            </p>
           </article>
         </div>
       </section>
@@ -172,13 +287,21 @@ n_head = 4</code></pre>
       <section class="section shell support" id="support">
         <h2>Support this project</h2>
         <p>
-          If these docs help you learn transformer internals, you can support ongoing
-          maintenance and educational content.
+          If these docs help you learn transformer internals, you can support
+          ongoing maintenance and educational content.
+        </p>
+        <p class="support-note">
+          Pick any option below. If you fork this docs template, replace these
+          links with your own profiles.
         </p>
         <div class="support-links">
-          <a class="pill" href="https://github.com/sponsors/dmoliveira">GitHub Sponsors</a>
-          <a class="pill" href="https://buymeacoffee.com">Buy Me a Coffee</a>
-          <a class="pill" href="https://ko-fi.com">Ko-fi</a>
+          <a class="pill" href="https://github.com/sponsors/dmoliveira"
+            >GitHub Sponsors</a
+          >
+          <a class="pill" href="https://www.paypal.com/paypalme/dmoliveira"
+            >PayPal</a
+          >
+          <a class="pill" href="https://ko-fi.com/dmoliveira">Ko-fi</a>
         </div>
       </section>
     </main>
@@ -186,7 +309,10 @@ n_head = 4</code></pre>
     <footer class="shell footer">
       <p>
         Documentation inspired by Karpathy's gist. Attribution:
-        <a href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95">microgpt.py</a>
+        <a
+          href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95"
+          >microgpt.py</a
+        >
       </p>
     </footer>
 

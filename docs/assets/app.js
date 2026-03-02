@@ -17,7 +17,9 @@ function drawLossChart() {
   const height = canvas.height;
   const pad = 30;
 
-  const loss = [3.9, 3.4, 3.0, 2.7, 2.45, 2.32, 2.15, 2.02, 1.96, 1.9, 1.84, 1.8];
+  const loss = [
+    3.9, 3.4, 3.0, 2.7, 2.45, 2.32, 2.15, 2.02, 1.96, 1.9, 1.84, 1.8,
+  ];
 
   ctx.clearRect(0, 0, width, height);
   drawAxes(ctx, width, height, pad);
@@ -81,7 +83,22 @@ function drawAttentionHeatmap() {
   }
 }
 
+async function loadCoreCode() {
+  const el = document.getElementById("coreCode");
+  if (!el) return;
+  try {
+    const response = await fetch("assets/microgpt.py", { cache: "no-store" });
+    if (!response.ok) throw new Error("Failed to load source file");
+    const text = await response.text();
+    el.textContent = text;
+  } catch (_error) {
+    el.textContent =
+      "Unable to load local source. Open docs/assets/microgpt.py directly.";
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+  loadCoreCode();
   drawLossChart();
   drawAttentionHeatmap();
 });

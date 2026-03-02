@@ -2,10 +2,14 @@
 
 Public GitHub Pages documentation for Karpathy's `microgpt.py` implementation, with visual explanations and runnable examples.
 
+![microgpt docs preview](docs/assets/preview.svg)
+
 ## Features
 
 - Hero section with badges and quick links
-- Concept-first walkthrough of the full implementation
+- Context-first concepts section before code
+- Full embedded `microgpt.py` core source block
+- Step-by-step walkthrough after the full code listing
 - Code snippets with commentary for key blocks
 - Visuals: training curve chart and attention heatmap
 - Support / donation section for project sustainability
@@ -27,6 +31,18 @@ Open `docs/index.html` in your browser.
 3. Set source to **Deploy from a branch**.
 4. Select branch `main` and folder `/docs`.
 5. Save and wait for Pages to publish.
+
+## Donation links
+
+Support links live in `docs/index.html` under the `#support` section. Replace with your own profiles if you fork this repo.
+
+## Custom domain (optional)
+
+1. Copy `docs/CNAME.example` to `docs/CNAME`.
+2. Replace `docs.example.com` with your real domain.
+3. Commit and push.
+4. In GitHub repo settings, open **Pages** and set the same custom domain.
+5. Configure DNS with a `CNAME` record pointing to `<your-user>.github.io`.
 
 ## License
 
