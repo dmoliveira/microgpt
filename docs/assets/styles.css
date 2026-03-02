@@ -180,6 +180,24 @@ pre {
   padding: 0.7rem;
 }
 
+.code-frame pre {
+  max-height: 560px;
+  overflow: auto;
+}
+
+.code-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+}
+
+.code-meta a {
+  color: var(--brand);
+}
+
 code,
 pre {
   font-family: "IBM Plex Mono", monospace;

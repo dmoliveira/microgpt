@@ -83,7 +83,21 @@ function drawAttentionHeatmap() {
   }
 }
 
+async function loadCoreCode() {
+  const el = document.getElementById("coreCode");
+  if (!el) return;
+  try {
+    const response = await fetch("assets/microgpt.py", { cache: "no-store" });
+    if (!response.ok) throw new Error("Failed to load source file");
+    const text = await response.text();
+    el.textContent = text;
+  } catch (_error) {
+    el.textContent = "Unable to load local source. Open docs/assets/microgpt.py directly.";
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
+  loadCoreCode();
   drawLossChart();
   drawAttentionHeatmap();
 });

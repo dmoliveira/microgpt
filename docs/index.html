@@ -21,7 +21,9 @@
       <nav class="nav shell">
         <a class="logo" href="#top">microgpt</a>
         <div class="nav-links">
+          <a href="#context">Context</a>
           <a href="#concepts">Concepts</a>
+          <a href="#core-code">Core code</a>
           <a href="#implementation">Implementation</a>
           <a href="#visuals">Visuals</a>
           <a href="#support">Support</a>
@@ -70,8 +72,42 @@
     </header>
 
     <main>
+      <section class="section shell" id="context">
+        <h2>Context first</h2>
+        <p class="section-lead">
+          microgpt is a minimal, dependency-free GPT training and inference loop.
+          It is useful as a learning artifact because every primitive is explicit:
+          tokenization, autograd, transformer forward pass, optimizer update, and
+          autoregressive sampling.
+        </p>
+
+        <div class="grid cards">
+          <article class="card">
+            <h3>What this implementation teaches</h3>
+            <p>
+              How language modeling works end-to-end without framework magic or
+              hidden abstractions.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Why this matters</h3>
+            <p>
+              Once you understand this file, larger LLM stacks become easier to
+              reason about and debug.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Mental model</h3>
+            <p>
+              Predict next token repeatedly: train with cross-entropy,
+              backpropagate gradients, then sample one token at a time.
+            </p>
+          </article>
+        </div>
+      </section>
+
       <section class="section shell" id="concepts">
-        <h2>Main concepts</h2>
+        <h2>Important concepts before code</h2>
         <p class="section-lead">
           The implementation is intentionally compact. Each block corresponds to
           one fundamental model primitive.
@@ -109,8 +145,29 @@
         </div>
       </section>
 
+      <section class="section shell" id="core-code">
+        <h2>Full core code</h2>
+        <p class="section-lead">
+          Complete source from Karpathy's microgpt gist, embedded locally for
+          uninterrupted reading.
+        </p>
+        <article class="card code-frame">
+          <div class="code-meta">
+            <span
+              >Source:
+              <a
+                href="https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95"
+                >karpathy/microgpt.py</a
+              ></span
+            >
+            <span>File: <code>docs/assets/microgpt.py</code></span>
+          </div>
+          <pre><code id="coreCode">Loading core code...</code></pre>
+        </article>
+      </section>
+
       <section class="section shell" id="implementation">
-        <h2>Implementation walkthrough</h2>
+        <h2>Step-by-step explanation (after code)</h2>
         <div class="timeline">
           <article>
             <h3>1) Build a tiny corpus</h3>
