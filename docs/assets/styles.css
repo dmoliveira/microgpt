@@ -23,8 +23,7 @@ body {
 body {
   background:
     radial-gradient(circle at 10% 5%, #f0c08755, transparent 35%),
-    radial-gradient(circle at 90% 15%, #2a9d8f1f, transparent 30%),
-    var(--bg);
+    radial-gradient(circle at 90% 15%, #2a9d8f1f, transparent 30%), var(--bg);
   color: var(--ink);
   font-family: "Space Grotesk", sans-serif;
   line-height: 1.6;
