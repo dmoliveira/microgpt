@@ -24,6 +24,7 @@
           <a href="#context">Context</a>
           <a href="#concepts">Concepts</a>
           <a href="#core-code">Core code</a>
+          <a href="#code-map">Code map</a>
           <a href="#implementation">Implementation</a>
           <a href="#visuals">Visuals</a>
           <a href="#support">Support</a>
@@ -166,6 +167,62 @@
         </article>
       </section>
 
+      <section class="section shell" id="code-map">
+        <h2>Guided code map</h2>
+        <p class="section-lead">
+          Left side shows the active code excerpt. Right side explains why it
+          matters. Click any step to switch context.
+        </p>
+        <div class="split-map">
+          <article class="card code-pane">
+            <div class="code-meta">
+              <span id="mapTitle">Dataset bootstrapping</span>
+              <span>Focus excerpt</span>
+            </div>
+            <pre><code id="mapCode"></code></pre>
+          </article>
+          <article
+            class="card notes-pane"
+            id="mapSteps"
+            aria-label="Code map steps"
+          >
+            <button class="map-step active" data-step="dataset" type="button">
+              <strong>1) Dataset and shuffle</strong>
+              <span>Build corpus and randomize ordering before training.</span>
+            </button>
+            <button class="map-step" data-step="tokenizer" type="button">
+              <strong>2) Token IDs and BOS</strong>
+              <span>Create vocabulary and reserve BOS for boundaries.</span>
+            </button>
+            <button class="map-step" data-step="autograd" type="button">
+              <strong>3) Autograd graph</strong>
+              <span
+                >Track local derivatives and reverse-traverse for
+                gradients.</span
+              >
+            </button>
+            <button class="map-step" data-step="transformer" type="button">
+              <strong>4) Transformer pass</strong>
+              <span
+                >Apply attention, residuals, MLP, and project to logits.</span
+              >
+            </button>
+            <button class="map-step" data-step="train" type="button">
+              <strong>5) Training loop + Adam</strong>
+              <span
+                >Compute loss, backprop, and update parameters each step.</span
+              >
+            </button>
+            <button class="map-step" data-step="sample" type="button">
+              <strong>6) Autoregressive sampling</strong>
+              <span
+                >Generate one token at a time with temperature scaling.</span
+              >
+            </button>
+          </article>
+        </div>
+      </section>
+
       <section class="section shell" id="implementation">
         <h2>Step-by-step explanation (after code)</h2>
         <div class="timeline">
@@ -229,6 +286,20 @@ vocab_size = len(uchars) + 1</code></pre>
               src="assets/architecture.svg"
               alt="MicroGPT architecture from tokens to sampled output"
             />
+          </article>
+
+          <article class="panel">
+            <h3>Animated token flow</h3>
+            <p class="panel-lead">
+              A lightweight animation of how one token moves through embedding,
+              attention, logits, and next-token sampling.
+            </p>
+            <canvas
+              id="pipelineAnim"
+              width="520"
+              height="220"
+              aria-label="Animated token flow diagram"
+            ></canvas>
           </article>
 
           <article class="panel">
