@@ -34,6 +34,7 @@ def main() -> None:
         'id="mapCode"',
         'class="line-index"',
         'class="card-jump"',
+        'class="copy-anchor"',
     ]
 
     missing = [item for item in required_ids if item not in html]

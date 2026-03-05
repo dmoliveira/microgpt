@@ -192,6 +192,12 @@ pre {
   margin-bottom: 0.65rem;
 }
 
+.line-index-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .line-index a,
 .card-jump {
   text-decoration: none;
@@ -207,6 +213,17 @@ pre {
 .card-jump {
   display: inline-block;
   margin-top: 0.45rem;
+}
+
+.copy-anchor {
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  font-family: "IBM Plex Mono", monospace;
+  cursor: pointer;
 }
 
 .code-line {
