@@ -183,6 +183,46 @@ function setupConceptJumps() {
   });
 }
 
+async function copyText(value) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(value);
+    return;
+  }
+  const temp = document.createElement("textarea");
+  temp.value = value;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+}
+
+function setupCopyAnchorButtons() {
+  const buttons = Array.from(
+    document.querySelectorAll(".copy-anchor[data-anchor]"),
+  );
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const anchor = button.dataset.anchor;
+      if (!anchor) return;
+      const base = `${window.location.origin}${window.location.pathname}`;
+      const url = `${base}#${anchor}`;
+      const original = button.textContent;
+      try {
+        await copyText(url);
+        button.textContent = "Copied";
+        window.setTimeout(() => {
+          button.textContent = original;
+        }, 1200);
+      } catch {
+        button.textContent = "Failed";
+        window.setTimeout(() => {
+          button.textContent = original;
+        }, 1200);
+      }
+    });
+  });
+}
+
 function setupCodeMap() {
   const title = document.getElementById("mapTitle");
   const code = document.getElementById("mapCode");
@@ -305,6 +345,7 @@ async function loadCoreCode() {
 window.addEventListener("DOMContentLoaded", () => {
   loadCoreCode().then(() => {
     setupConceptJumps();
+    setupCopyAnchorButtons();
   });
   setupCodeMap();
   drawLossChart();

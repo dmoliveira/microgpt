@@ -17,6 +17,7 @@ Public GitHub Pages documentation for Karpathy's `microgpt.py` implementation, w
 - Visuals: training curve chart, attention heatmap, and animated token flow
 - Support / donation section for project sustainability
 - GitHub Actions CI: formatting + docs integrity + Lighthouse quality audit
+- Lighthouse threshold profiles: softer PR gates, stricter main branch gates
 
 ## Attribution
 
