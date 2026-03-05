@@ -32,6 +32,8 @@ def main() -> None:
         'id="pipelineAnim"',
         'id="coreCode"',
         'id="mapCode"',
+        'class="line-index"',
+        'class="card-jump"',
     ]
 
     missing = [item for item in required_ids if item not in html]

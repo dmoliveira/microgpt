@@ -140,6 +140,49 @@ for i, p in enumerate(params):
   },
 };
 
+function escapeHtml(text) {
+  return text
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function renderCodeWithLineAnchors(target, source) {
+  const lines = source.split("\n");
+  target.innerHTML = lines
+    .map((line, index) => {
+      const lineNo = index + 1;
+      return `<span class="code-line" id="L${lineNo}"><a class="line-number" href="#L${lineNo}">${lineNo.toString().padStart(3, " ")}</a>${escapeHtml(line)}</span>`;
+    })
+    .join("\n");
+}
+
+function jumpToCoreLine(lineNumber) {
+  const line = document.getElementById(`L${lineNumber}`);
+  if (!line) return;
+  const section = document.getElementById("core-code");
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  window.setTimeout(() => {
+    line.scrollIntoView({ behavior: "smooth", block: "center" });
+    history.replaceState(null, "", `#L${lineNumber}`);
+  }, 180);
+}
+
+function setupConceptJumps() {
+  const links = Array.from(document.querySelectorAll(".card-jump[data-line]"));
+  links.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      const line = Number(link.dataset.line || "0");
+      if (line > 0) jumpToCoreLine(line);
+    });
+  });
+}
+
 function setupCodeMap() {
   const title = document.getElementById("mapTitle");
   const code = document.getElementById("mapCode");
@@ -159,6 +202,26 @@ function setupCodeMap() {
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
       activate(button.dataset.step || "dataset");
+    });
+    button.addEventListener("keydown", (event) => {
+      const currentIndex = buttons.indexOf(button);
+      if (currentIndex < 0) return;
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+        event.preventDefault();
+        buttons[(currentIndex + 1) % buttons.length].focus();
+      } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        event.preventDefault();
+        buttons[(currentIndex - 1 + buttons.length) % buttons.length].focus();
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        buttons[0].focus();
+      } else if (event.key === "End") {
+        event.preventDefault();
+        buttons[buttons.length - 1].focus();
+      } else if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activate(button.dataset.step || "dataset");
+      }
     });
   });
 
@@ -232,7 +295,7 @@ async function loadCoreCode() {
     const response = await fetch("assets/microgpt.py", { cache: "no-store" });
     if (!response.ok) throw new Error("Failed to load source file");
     const text = await response.text();
-    el.textContent = text;
+    renderCodeWithLineAnchors(el, text);
   } catch (_error) {
     el.textContent =
       "Unable to load local source. Open docs/assets/microgpt.py directly.";
@@ -240,7 +303,9 @@ async function loadCoreCode() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  loadCoreCode();
+  loadCoreCode().then(() => {
+    setupConceptJumps();
+  });
   setupCodeMap();
   drawLossChart();
   drawAttentionHeatmap();
