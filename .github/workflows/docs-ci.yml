@@ -24,10 +24,15 @@ jobs:
           python-version: "3.11"
 
       - name: Prettier check
-        run: npx --yes prettier --check "README.md" "docs/**/*.html" "docs/**/*.css" "docs/**/*.js"
+        run: npx --yes prettier --check "README.md" "docs/**/*.html" "docs/**/*.css" "docs/**/*.js" ".lighthouserc*.json"
 
       - name: Docs integrity check
         run: python3 scripts/verify_docs.py
 
       - name: Lighthouse quality audit
-        run: npx --yes @lhci/cli@0.13.0 autorun --config=.lighthouserc.json
+        if: github.event_name == 'pull_request'
+        run: npx --yes @lhci/cli@0.13.0 autorun --config=.lighthouserc.pr.json
+
+      - name: Lighthouse quality audit (strict main)
+        if: github.event_name == 'push'
+        run: npx --yes @lhci/cli@0.13.0 autorun --config=.lighthouserc.main.json
