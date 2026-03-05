@@ -272,6 +272,11 @@ pre {
   background: #f0fbfd;
 }
 
+.map-hint {
+  color: var(--muted);
+  margin-top: -0.2rem;
+}
+
 .map-step:focus-visible {
   outline: 3px solid #7bd3e5;
   outline-offset: 2px;
