@@ -32,6 +32,8 @@ def main() -> None:
         'id="pipelineAnim"',
         'id="coreCode"',
         'id="mapCode"',
+        'id="codeStats"',
+        'id="copyToast"',
         'class="line-index"',
         'class="card-jump"',
         'class="copy-anchor"',

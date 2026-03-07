@@ -149,14 +149,44 @@ function escapeHtml(text) {
     .replaceAll("'", "&#39;");
 }
 
+function highlightLine(rawLine) {
+  const escaped = escapeHtml(rawLine);
+  const trimmed = rawLine.trimStart();
+  if (trimmed.startsWith("#")) {
+    return `<span class="tok-c">${escaped}</span>`;
+  }
+
+  let line = escaped;
+  line = line.replace(
+    /\b(def|class|for|if|else|elif|return|import|from|while|break|continue|try|except|with|in|and|or|not|lambda)\b/g,
+    '<span class="tok-k">$1</span>',
+  );
+  line = line.replace(
+    /\b(True|False|None)\b/g,
+    '<span class="tok-b">$1</span>',
+  );
+  line = line.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="tok-n">$1</span>');
+  line = line.replace(
+    /(&quot;[^&]*?&quot;|&#39;[^&]*?&#39;)/g,
+    '<span class="tok-s">$1</span>',
+  );
+  return line;
+}
+
 function renderCodeWithLineAnchors(target, source) {
   const lines = source.split("\n");
   target.innerHTML = lines
     .map((line, index) => {
       const lineNo = index + 1;
-      return `<span class="code-line" id="L${lineNo}"><a class="line-number" href="#L${lineNo}">${lineNo.toString().padStart(3, " ")}</a>${escapeHtml(line)}</span>`;
+      const highlighted = highlightLine(line);
+      return `<span class="code-line" id="L${lineNo}"><a class="line-number" href="#L${lineNo}">${lineNo.toString().padStart(3, " ")}</a>${highlighted}</span>`;
     })
     .join("\n");
+
+  const stats = document.getElementById("codeStats");
+  if (stats) {
+    stats.innerHTML = `File: <code>docs/assets/microgpt.py</code> · ${lines.length} lines`;
+  }
 }
 
 function jumpToCoreLine(lineNumber) {
@@ -196,10 +226,29 @@ async function copyText(value) {
   document.body.removeChild(temp);
 }
 
+function showCopyToast(message) {
+  const toast = document.getElementById("copyToast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("show");
+  window.clearTimeout(showCopyToast.timeoutId);
+  showCopyToast.timeoutId = window.setTimeout(() => {
+    toast.classList.remove("show");
+  }, 1500);
+}
+
 function setupCopyAnchorButtons() {
   const buttons = Array.from(
     document.querySelectorAll(".copy-anchor[data-anchor]"),
   );
+  buttons.forEach((button) => {
+    const anchor = button.dataset.anchor;
+    if (anchor) {
+      button.dataset.tip = `Copy #${anchor}`;
+      button.setAttribute("aria-label", `Copy permalink for ${anchor}`);
+    }
+  });
+
   buttons.forEach((button) => {
     button.addEventListener("click", async () => {
       const anchor = button.dataset.anchor;
@@ -210,11 +259,13 @@ function setupCopyAnchorButtons() {
       try {
         await copyText(url);
         button.textContent = "Copied";
+        showCopyToast(`Copied link #${anchor}`);
         window.setTimeout(() => {
           button.textContent = original;
         }, 1200);
       } catch {
         button.textContent = "Failed";
+        showCopyToast("Copy failed on this browser");
         window.setTimeout(() => {
           button.textContent = original;
         }, 1200);
