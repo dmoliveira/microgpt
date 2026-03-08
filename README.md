@@ -13,12 +13,15 @@ Public GitHub Pages documentation for Karpathy's `microgpt.py` implementation, w
 - Keyboard navigation for guided map steps (arrows, Home/End, Enter/Space)
 - Line-range anchors from concept cards into the full embedded code view
 - Copyable deep links for anchor ranges with mobile-friendly toast feedback
+- Code theme switcher (terminal, paper, high-contrast) for readability preferences
+- Inline mini-annotations for key line anchors in the core code panel
 - Step-by-step walkthrough after the full code listing
 - Code snippets with commentary and enhanced visual code rendering
 - Visuals: training curve chart, attention heatmap, and animated token flow
 - Support / donation section for project sustainability
 - GitHub Actions CI: formatting + docs integrity + Lighthouse quality audit
 - Lighthouse threshold profiles: softer PR gates, stricter main branch gates
+- Playwright visual snapshot checks with uploaded artifacts
 
 ## Attribution
 

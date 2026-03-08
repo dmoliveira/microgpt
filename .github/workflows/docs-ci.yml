@@ -23,6 +23,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Playwright browsers
+        run: npx --yes playwright@1.52.0 install --with-deps chromium webkit
+
       - name: Prettier check
         run: npx --yes prettier --check "README.md" "docs/**/*.html" "docs/**/*.css" "docs/**/*.js" ".lighthouserc*.json"
 
@@ -36,3 +39,21 @@ jobs:
       - name: Lighthouse quality audit (strict main)
         if: github.event_name == 'push'
         run: npx --yes @lhci/cli@0.13.0 autorun --config=.lighthouserc.main.json
+
+      - name: Visual snapshot checks
+        run: |
+          python3 -m http.server 4173 --directory docs >/tmp/microgpt-http.log 2>&1 &
+          SERVER_PID=$!
+          mkdir -p .artifacts/visual-check
+          npx --yes playwright@1.52.0 screenshot --device="Desktop Chrome" "http://127.0.0.1:4173/index.html?freeze=1" ".artifacts/visual-check/desktop-home.png"
+          npx --yes playwright@1.52.0 screenshot --device="iPhone 13" "http://127.0.0.1:4173/index.html?freeze=1" ".artifacts/visual-check/mobile-home.png"
+          test -s .artifacts/visual-check/desktop-home.png
+          test -s .artifacts/visual-check/mobile-home.png
+          kill "$SERVER_PID"
+
+      - name: Upload visual snapshot artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-check-snapshots
+          path: .artifacts/visual-check/*.png
