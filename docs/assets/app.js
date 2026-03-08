@@ -140,6 +140,15 @@ for i, p in enumerate(params):
   },
 };
 
+const LINE_NOTES = {
+  12: "Dataset bootstrap: fetches names.txt only if missing, keeping runs reproducible and simple.",
+  22: "Tokenizer setup: creates a compact vocabulary and reserves BOS as a boundary token.",
+  30: "Autograd core: the Value class stores graph links and local derivatives for backprop.",
+  108: "Transformer block: attention weights aggregate context, then residuals preserve information flow.",
+  175: "Training loop: computes sequence loss, runs backward, and updates parameters with Adam.",
+  211: "Sampling loop: generates token-by-token with temperature to balance coherence and creativity.",
+};
+
 function escapeHtml(text) {
   return text
     .replaceAll("&", "&amp;")
@@ -189,6 +198,38 @@ function renderCodeWithLineAnchors(target, source) {
   }
 }
 
+function applyCodeTheme(theme) {
+  const body = document.body;
+  body.classList.remove("code-theme-paper", "code-theme-contrast");
+  if (theme === "paper") body.classList.add("code-theme-paper");
+  if (theme === "contrast") body.classList.add("code-theme-contrast");
+
+  const buttons = Array.from(
+    document.querySelectorAll(".theme-btn[data-theme]"),
+  );
+  buttons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.theme === theme);
+  });
+}
+
+function setupThemeSwitcher() {
+  const buttons = Array.from(
+    document.querySelectorAll(".theme-btn[data-theme]"),
+  );
+  if (buttons.length === 0) return;
+  const stored =
+    window.localStorage.getItem("microgpt-code-theme") || "terminal";
+  applyCodeTheme(stored);
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const theme = button.dataset.theme || "terminal";
+      applyCodeTheme(theme);
+      window.localStorage.setItem("microgpt-code-theme", theme);
+    });
+  });
+}
+
 function jumpToCoreLine(lineNumber) {
   const line = document.getElementById(`L${lineNumber}`);
   if (!line) return;
@@ -211,6 +252,44 @@ function setupConceptJumps() {
       if (line > 0) jumpToCoreLine(line);
     });
   });
+}
+
+function setLineAnnotation(lineNumber) {
+  const note = document.getElementById("lineAnnotation");
+  if (!note) return;
+  const message = LINE_NOTES[lineNumber];
+  if (!message) {
+    note.textContent =
+      "Tip: key lines 12, 22, 30, 108, 175, and 211 include mini-annotations.";
+    return;
+  }
+  note.textContent = `Line ${lineNumber}: ${message}`;
+}
+
+function setupLineAnnotations() {
+  const code = document.getElementById("coreCode");
+  if (!code) return;
+
+  code.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (!target.classList.contains("line-number")) return;
+    const hash = target.getAttribute("href") || "";
+    const lineNumber = Number(hash.replace("#L", ""));
+    if (lineNumber > 0) {
+      setLineAnnotation(lineNumber);
+    }
+  });
+
+  window.addEventListener("hashchange", () => {
+    const lineNumber = Number(window.location.hash.replace("#L", ""));
+    if (lineNumber > 0) {
+      setLineAnnotation(lineNumber);
+    }
+  });
+
+  const initial = Number(window.location.hash.replace("#L", ""));
+  if (initial > 0) setLineAnnotation(initial);
 }
 
 async function copyText(value) {
@@ -319,7 +398,7 @@ function setupCodeMap() {
   activate("dataset");
 }
 
-function animatePipeline() {
+function animatePipeline(freeze = false) {
   const canvas = document.getElementById("pipelineAnim");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
@@ -373,10 +452,16 @@ function animatePipeline() {
     ctx.font = "12px IBM Plex Mono";
     ctx.fillText("next token distribution", 356, 172);
 
-    window.requestAnimationFrame(drawFrame);
+    if (!freeze) {
+      window.requestAnimationFrame(drawFrame);
+    }
   }
 
-  window.requestAnimationFrame(drawFrame);
+  if (freeze) {
+    drawFrame(0);
+  } else {
+    window.requestAnimationFrame(drawFrame);
+  }
 }
 
 async function loadCoreCode() {
@@ -394,12 +479,16 @@ async function loadCoreCode() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  const freezeMotion =
+    new URLSearchParams(window.location.search).get("freeze") === "1";
   loadCoreCode().then(() => {
     setupConceptJumps();
     setupCopyAnchorButtons();
+    setupLineAnnotations();
   });
+  setupThemeSwitcher();
   setupCodeMap();
   drawLossChart();
   drawAttentionHeatmap();
-  animatePipeline();
+  animatePipeline(freezeMotion);
 });
