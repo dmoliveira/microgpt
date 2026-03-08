@@ -23,8 +23,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Playwright Chromium
-        run: npx --yes playwright@1.52.0 install --with-deps chromium
+      - name: Install Playwright browsers
+        run: npx --yes playwright@1.52.0 install --with-deps chromium webkit
 
       - name: Prettier check
         run: npx --yes prettier --check "README.md" "docs/**/*.html" "docs/**/*.css" "docs/**/*.js" ".lighthouserc*.json"
