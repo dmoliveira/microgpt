@@ -567,6 +567,21 @@ body.code-theme-contrast #fontSizeLabel {
   margin-bottom: 0.6rem;
 }
 
+.present-btn {
+  border: 1px solid #36637f;
+  border-radius: 999px;
+  background: #113147;
+  color: #d9ecf7;
+  padding: 0.28rem 0.65rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.present-btn:hover {
+  border-color: #84bfd7;
+}
+
 .code-meta a {
   color: var(--brand);
 }
@@ -666,6 +681,26 @@ canvas {
 .copy-toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+body.presentation-mode header,
+body.presentation-mode #context,
+body.presentation-mode #concepts,
+body.presentation-mode #code-map,
+body.presentation-mode #implementation,
+body.presentation-mode #visuals,
+body.presentation-mode #examples,
+body.presentation-mode #support,
+body.presentation-mode .footer {
+  display: none;
+}
+
+body.presentation-mode {
+  background: linear-gradient(160deg, #09121a 0%, #0f1a23 100%);
+}
+
+body.presentation-mode #core-code {
+  width: min(1400px, 97vw);
 }
 
 @media (max-width: 760px) {
