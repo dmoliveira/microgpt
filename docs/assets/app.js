@@ -149,6 +149,13 @@ const LINE_NOTES = {
   211: "Sampling loop: generates token-by-token with temperature to balance coherence and creativity.",
 };
 
+const FONT_SETTINGS = {
+  minStep: -2,
+  maxStep: 4,
+  baseRem: 0.92,
+  deltaRem: 0.06,
+};
+
 function escapeHtml(text) {
   return text
     .replaceAll("&", "&amp;")
@@ -209,6 +216,54 @@ function applyCodeTheme(theme) {
   );
   buttons.forEach((button) => {
     button.classList.toggle("active", button.dataset.theme === theme);
+  });
+}
+
+function applyCodeFontStep(step) {
+  const clamped = Math.min(
+    FONT_SETTINGS.maxStep,
+    Math.max(FONT_SETTINGS.minStep, step),
+  );
+  const size = FONT_SETTINGS.baseRem + clamped * FONT_SETTINGS.deltaRem;
+  document.documentElement.style.setProperty(
+    "--code-font-size",
+    `${size.toFixed(2)}rem`,
+  );
+
+  const label = document.getElementById("fontSizeLabel");
+  if (label) {
+    const pct = Math.round((size / FONT_SETTINGS.baseRem - 1) * 100);
+    const sign = pct > 0 ? "+" : "";
+    label.textContent = `Code size ${sign}${pct}%`;
+  }
+
+  return clamped;
+}
+
+function setupFontControls() {
+  const controls = Array.from(
+    document.querySelectorAll(".font-btn[data-font-action]"),
+  );
+  if (controls.length === 0) return;
+
+  let currentStep = Number(
+    window.localStorage.getItem("microgpt-code-font-step") || "0",
+  );
+  if (Number.isNaN(currentStep)) currentStep = 0;
+  currentStep = applyCodeFontStep(currentStep);
+
+  controls.forEach((button) => {
+    button.addEventListener("click", () => {
+      const action = button.dataset.fontAction;
+      if (action === "increase") currentStep += 1;
+      if (action === "decrease") currentStep -= 1;
+      if (action === "reset") currentStep = 0;
+      currentStep = applyCodeFontStep(currentStep);
+      window.localStorage.setItem(
+        "microgpt-code-font-step",
+        String(currentStep),
+      );
+    });
   });
 }
 
@@ -487,6 +542,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setupLineAnnotations();
   });
   setupThemeSwitcher();
+  setupFontControls();
   setupCodeMap();
   drawLossChart();
   drawAttentionHeatmap();
