@@ -16,6 +16,7 @@ Public GitHub Pages documentation for Karpathy's `microgpt.py` implementation, w
 - Code theme switcher (terminal, paper, high-contrast) for readability preferences
 - Refined paper theme palette with warmer, more editorial code styling
 - Code font-size controls with persisted accessibility preferences
+- Presentation mode toggle for focused code reading and clean screenshots
 - Inline mini-annotations for key line anchors in the core code panel
 - Step-by-step walkthrough after the full code listing
 - Code snippets with commentary and enhanced visual code rendering
