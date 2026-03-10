@@ -267,6 +267,37 @@ function setupFontControls() {
   });
 }
 
+function applyPresentationMode(enabled) {
+  document.body.classList.toggle("presentation-mode", enabled);
+  const button = document.getElementById("presentationToggle");
+  if (button) {
+    button.textContent = enabled
+      ? "Exit presentation mode"
+      : "Presentation mode";
+  }
+}
+
+function setupPresentationMode() {
+  const button = document.getElementById("presentationToggle");
+  if (!button) return;
+
+  const fromQuery =
+    new URLSearchParams(window.location.search).get("present") === "1";
+  const stored =
+    window.localStorage.getItem("microgpt-presentation-mode") === "1";
+  let enabled = fromQuery || stored;
+  applyPresentationMode(enabled);
+
+  button.addEventListener("click", () => {
+    enabled = !enabled;
+    applyPresentationMode(enabled);
+    window.localStorage.setItem(
+      "microgpt-presentation-mode",
+      enabled ? "1" : "0",
+    );
+  });
+}
+
 function setupThemeSwitcher() {
   const buttons = Array.from(
     document.querySelectorAll(".theme-btn[data-theme]"),
@@ -541,6 +572,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setupCopyAnchorButtons();
     setupLineAnnotations();
   });
+  setupPresentationMode();
   setupThemeSwitcher();
   setupFontControls();
   setupCodeMap();
