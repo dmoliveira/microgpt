@@ -288,13 +288,36 @@ function setupPresentationMode() {
   let enabled = fromQuery || stored;
   applyPresentationMode(enabled);
 
-  button.addEventListener("click", () => {
+  function toggleMode() {
     enabled = !enabled;
     applyPresentationMode(enabled);
     window.localStorage.setItem(
       "microgpt-presentation-mode",
       enabled ? "1" : "0",
     );
+  }
+
+  button.addEventListener("click", () => {
+    toggleMode();
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented) return;
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const target = event.target;
+    if (
+      target instanceof HTMLElement &&
+      (target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT" ||
+        target.isContentEditable)
+    ) {
+      return;
+    }
+    if (event.key.toLowerCase() === "p") {
+      event.preventDefault();
+      toggleMode();
+    }
   });
 }
 
