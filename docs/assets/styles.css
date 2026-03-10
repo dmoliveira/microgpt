@@ -19,6 +19,7 @@
   --code-line-even: #0e1a22;
   --code-line-target: #183a4a;
   --code-line-number: #6f8698;
+  --code-font-size: 0.92rem;
 }
 
 * {
@@ -330,6 +331,33 @@ pre {
   border-bottom: 1px solid #1f3442;
 }
 
+.font-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.85rem 0.7rem;
+  border-bottom: 1px solid #1f3442;
+  background: #0d1b25;
+}
+
+.font-btn {
+  border: 1px solid #335467;
+  border-radius: 999px;
+  background: #132837;
+  color: #d2e5f2;
+  padding: 0.2rem 0.55rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+#fontSizeLabel {
+  color: #9fbece;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+}
+
 .theme-btn {
   border: 1px solid #2f4a5d;
   border-radius: 999px;
@@ -356,17 +384,17 @@ pre {
 }
 
 body.code-theme-paper {
-  --code-bg-1: #f8f8f7;
-  --code-bg-2: #ffffff;
-  --code-chip-bg: #f4f6fa;
-  --code-chip-border: #d0d8e2;
-  --code-chip-text: #214f70;
-  --code-copy-bg: #ffffff;
-  --code-copy-border: #ccd6e1;
-  --code-copy-text: #33485c;
-  --code-line-even: #f7fafc;
-  --code-line-target: #e5f0f8;
-  --code-line-number: #7b8a97;
+  --code-bg-1: #fbf7ee;
+  --code-bg-2: #fffdfa;
+  --code-chip-bg: #f3ecdf;
+  --code-chip-border: #d5c6ae;
+  --code-chip-text: #5f4524;
+  --code-copy-bg: #fff7ea;
+  --code-copy-border: #d7c5a4;
+  --code-copy-text: #634723;
+  --code-line-even: #f8f2e8;
+  --code-line-target: #efe5d2;
+  --code-line-number: #92795a;
 }
 
 body.code-theme-paper .code-frame {
@@ -380,22 +408,33 @@ body.code-theme-paper .code-frame .code-meta {
 
 body.code-theme-paper .code-frame .line-index,
 body.code-theme-paper .theme-switcher,
+body.code-theme-paper .font-controls,
 body.code-theme-paper .line-annotation {
-  border-color: #dbe3ec;
-  background: #f7f9fc;
-  color: #42576a;
+  border-color: #e2d7c4;
+  background: #faf4e9;
+  color: #6f5432;
 }
 
 body.code-theme-paper .theme-btn {
-  background: #f4f7fb;
-  color: #365064;
-  border-color: #d2dde7;
+  background: #f6ead8;
+  color: #644828;
+  border-color: #dac8aa;
 }
 
 body.code-theme-paper .theme-btn.active {
-  background: #e6eef6;
-  color: #1d405a;
-  border-color: #8db3d2;
+  background: #ead8bd;
+  color: #4f3516;
+  border-color: #bc9c69;
+}
+
+body.code-theme-paper .font-btn {
+  background: #f7ebd8;
+  color: #664a29;
+  border-color: #d9c5a4;
+}
+
+body.code-theme-paper #fontSizeLabel {
+  color: #7c6548;
 }
 
 body.code-theme-contrast {
@@ -415,9 +454,20 @@ body.code-theme-contrast {
 body.code-theme-contrast .code-frame,
 body.code-theme-contrast .code-frame .line-index,
 body.code-theme-contrast .theme-switcher,
+body.code-theme-contrast .font-controls,
 body.code-theme-contrast .line-annotation,
 body.code-theme-contrast .code-frame .code-meta {
   border-color: #555;
+}
+
+body.code-theme-contrast .font-btn {
+  background: #0d0d0d;
+  color: #f5f5f5;
+  border-color: #6e6e6e;
+}
+
+body.code-theme-contrast #fontSizeLabel {
+  color: #f0f0f0;
 }
 
 .tok-k {
@@ -528,7 +578,7 @@ body.code-theme-contrast .code-frame .code-meta {
 code,
 pre {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.92rem;
+  font-size: var(--code-font-size);
 }
 
 .visual-grid {
